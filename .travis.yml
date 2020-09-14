@@ -11,17 +11,17 @@ script:
     - docker run -e CI=true rishiksaran/react-test npm run test
 
 after_success:
-    - docker build -t rishiksaran/multi-client ./client
-    - docker build -t rishiksaran/multi-nginx ./nginx
-    - docker build -t rishiksaran/multi-server ./server
-    - docker build -t rishiksaran/multi-worker ./worker
+    - docker build -t rockerid/multi-client ./client
+    - docker build -t rockerid/multi-nginx ./nginx
+    - docker build -t rockerid/multi-server ./server
+    - docker build -t rockerid/multi-worker ./worker
     #Log in to the docker CLI
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
     #Take the above built images and push them to docker hub
-    - docker push rishiksaran/multi-client
-    - docker push rishiksaran/multi-nginx
-    - docker push rishiksaran/multi-server
-    - docker push rishiksaran/multi-worker
+    - docker push rockerid/multi-client
+    - docker push rockerid/multi-nginx
+    - docker push rockerid/multi-server
+    - docker push rockerid/multi-worker
 
 
 #deploy:
