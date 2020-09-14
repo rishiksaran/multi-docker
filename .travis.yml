@@ -1,0 +1,38 @@
+sudo: required
+language: generic
+
+services:
+    - docker
+
+before_install:
+    - docker build -t rishiksaran/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+    - docker run -e CI=true rishiksaran/react-test npm run test
+
+after_success:
+    - docker build -t rishiksaran/multi-client ./client
+    - docker build -t rishiksaran/multi-nginx ./nginx
+    - docker build -t rishiksaran/multi-server ./server
+    - docker build -t rishiksaran/multi-worker ./worker
+    #Log in to the docker CLI
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    #Take the above built images and push them to docker hub
+    - docker push rishiksaran/multi-client
+    - docker push rishiksaran/multi-nginx
+    - docker push rishiksaran/multi-server
+    - docker push rishiksaran/multi-worker
+
+
+#deploy:
+#    provider: elasticbeanstalk
+#    region: "us-west-2"
+#    app: "docker-react"
+#    env: "Docker-env"
+#    bucket_name: "S3 bucket name"
+#    bucket_path: "docker-react"
+#    on:
+#        branch: master
+#    access_key_id: $AWS_ACCESS_KEY
+#    secret_access_key: 
+#        secure: "$AWS_SECRET_KEY"
